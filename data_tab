@@ -1,27 +1,31 @@
-
 library(readxl)
 library(dplyr)
 library(tidyr)
 
-ameca  <- read_excel("Desktop/CV/2021_Homologado_observaciones_limpio.xlsx", sheet = "Ameca 21")
-grullo <- read_excel("Desktop/CV/2021_Homologado_observaciones_limpio.xlsx", sheet = "El Grullo 21")
-barca  <- read_excel("Desktop/CV/2021_Homologado_observaciones_limpio.xlsx", sheet = "La Barca 21")
-zapotlan <- read_excel("Desktop/CV/2021_Homologado_observaciones_limpio.xlsx", sheet = "Zapotlán 21")
-tlajo  <- read_excel("Desktop/CV/2021_Homologado_observaciones_limpio.xlsx", sheet = "Tlajo 21")
-umea <- read_excel("Desktop/CV/2021_Homologado_observaciones_limpio.xlsx", sheet = "UMEA 21")
-salto  <- read_excel("Desktop/CV/2021_Homologado_observaciones_limpio.xlsx", sheet = "El Salto 21")
+ameca  <- read_excel("Desktop/CV/2021_Homologado_observaciones_julio.xlsx", sheet = "Ameca 21")
+grullo <- read_excel("Desktop/CV/2021_Homologado_observaciones_julio.xlsx", sheet = "El Grullo 21")
+barca  <- read_excel("Desktop/CV/2021_Homologado_observaciones_julio.xlsx", sheet = "La Barca 21")
+zapotlan <- read_excel("Desktop/CV/2021_Homologado_observaciones_julio.xlsx", sheet = "Zapotlán 21")
+tlajo  <- read_excel("Desktop/CV/2021_Homologado_observaciones_julio.xlsx", sheet = "Tlajo 21")
+umea <- read_excel("Desktop/CV/2021_Homologado_observaciones_julio.xlsx", sheet = "UMEA 21")
+salto  <- read_excel("Desktop/CV/2021_Homologado_observaciones_julio.xlsx", sheet = "El Salto 21")
 
 
 base <-  rbind(ameca, grullo, barca, zapotlan, tlajo, umea, salto)
 
 write.csv(base, "base_atencion.csv")
+#Total de personas atendidas
+base %>% group_by(Unidad) %>% 
+  #filter(Mujer==1) %>% 
+  summarise(suma=n())
 
 base %>% group_by(Unidad) %>% 
   filter(Mujer==1) %>% 
   summarise(suma=n())
 
 #Edad
-base %>% group_by(Unidad) %>% 
+base %>%
+  filter(`EDAD (MESECVI) (ONU)EDAD (MESECVI) (ONU)`<2021) %>% 
   summarise(promedio=mean(`EDAD (MESECVI) (ONU)EDAD (MESECVI) (ONU)`, na.rm=T),
             maximo=max(`EDAD (MESECVI) (ONU)EDAD (MESECVI) (ONU)`, na.rm=T),
             minimo=min(`EDAD (MESECVI) (ONU)EDAD (MESECVI) (ONU)`, na.rm=T))
@@ -31,25 +35,37 @@ base %>% group_by(Unidad) %>%
   filter(`Consejería`==1) %>% 
   summarise(Consejería=n())
 
+base  %>% group_by(Unidad) %>% 
+  filter(`Asesoría Jurídica`==1) %>% 
+  summarise(Asesoría=n())
+
+base  %>% group_by(Unidad) %>% 
+  filter(`Trabajo Social`==1) %>% 
+  summarise(trabso=n())
+
+base  %>%  group_by(Unidad) %>% 
+  filter(`Asesoría Psicologica`==1) %>% 
+  summarise(Ase_psi=n())
+
 #Edad
 base %>% group_by(Unidad) %>% 
   filter(`Sexual`==1) %>% 
   summarise(sum=n())
 
 #¿Cómo se enteró del servicio?
-base %>% group_by(Unidad) %>% 
+base %>% 
   filter(`Al pasar`==1) %>% 
   summarise(sum=n())
 
-base %>% group_by(Unidad) %>% 
+base %>% 
   filter(`Conocidos`==1) %>% 
   summarise(sum=n())
 
-base %>% group_by(Unidad) %>% 
+base %>% 
   filter(`Internet`==1) %>% 
   summarise(sum=n())
 
-base %>% group_by(Unidad) %>% 
+base %>% 
   filter(`Otra Institución`==1) %>% 
   summarise(sum=n())
 #Presenta algún trámite en proceso
@@ -58,85 +74,154 @@ base %>% group_by(Unidad) %>%
   summarise(sum=n())
 
 #Modalidad de violencia identificada
-base %>% group_by(Unidad) %>% 
+base %>% 
   filter(`Familiar`==1) %>% 
   summarise(sum=n())
 
-base %>% group_by(Unidad) %>% 
+base  %>% 
   filter(`Laboral`==1) %>% 
   summarise(sum=n())
 
 
-base %>% group_by(Unidad) %>% 
+base %>% 
   filter(`Docente`==1) %>% 
   summarise(sum=n())
 
-base %>% group_by(Unidad) %>% 
+base %>% 
   filter(`En la Comunidad`==1) %>% 
   summarise(sum=n())
 
-base %>% group_by(Unidad) %>% 
+base %>% 
   filter(`En el Noviazgo`==1) %>% 
   summarise(sum=n())
 
-base %>% group_by(Unidad) %>% 
+base %>% 
   filter(`Institucional`==1) %>% 
   summarise(sum=n())
 
-base %>% group_by(Unidad) %>% 
+base %>% 
   filter(`Feminicida`==1) %>% 
   summarise(sum=n())
 
 
-base %>% group_by(Unidad) %>% 
+base %>% 
   filter(`Política de Género`==1) %>% 
   summarise(sum=n())
 
 
 
-base %>% group_by(Unidad) %>% 
+base %>%  
   filter(Intersexual==1) %>% 
   summarise(suma=n())
 
+###Ultimo episodio de violenci
+base %>% 
+  filter(`1 mes`==1)%>% 
+  summarise(suma=n())
+
+base %>% 
+  filter(`3 meses`==1)%>% 
+  summarise(suma=n())
+
+
+base %>% 
+  filter(`6 meses o más`==1)%>% 
+  summarise(suma=n())
+
+#####Tipo de violencia
+base %>% 
+  filter(`Física`==1)%>% 
+  summarise(suma=n())
+
+base %>% 
+  filter(`Psicológica`==1)%>% 
+  summarise(suma=n())
+
+base %>% 
+  filter(`Patrimonial`==1)%>% 
+  summarise(suma=n())
+
+base %>% 
+  filter(`Económica`==1)%>% 
+  summarise(suma=n())
+
+base %>% 
+  filter(`Sexual`==1)%>% 
+  summarise(suma=n())
+
+base %>% 
+  filter(`Digital`==1)%>% 
+  summarise(suma=n())
+
+#Originario de lengua indigena
+base %>% 
+  filter(base$`Hablante de lengua indígena.
+Si (1) - No (0)`==1)%>% 
+  summarise(suma=n())
+
+base %>% filter(`Habla alguna lengua extranjera.
+                 Si (1) - No (0)`==1) %>% summarise(suma=n())
+
 #Edo civil
 
-base %>% group_by(Unidad) %>% 
+base %>%
   filter(Mujer==1) %>% 
   filter(`Soltera/o`==1) %>% 
   summarise(suma=n())
 
-base %>% group_by(Unidad) %>% 
+base %>%
   filter(Mujer==1) %>% 
   filter(`Casada/o`==1) %>% 
   summarise(suma=n())
 
-base %>% group_by(Unidad) %>% 
+base %>%
   filter(Mujer==1) %>% 
-  filter(`No Especificó`==1) %>% 
+  filter(`Concubinato`==1) %>% 
+  summarise(suma=n())
+
+base %>%
+  filter(Mujer==1) %>% 
+  filter(`Unión Libre`==1) %>% 
+  summarise(suma=n())
+
+base %>%
+  filter(Mujer==1) %>% 
+  filter(`Separada/o`==1) %>% 
   summarise(suma=n())
 
 #Educac
-base %>% group_by(Unidad) %>% 
-    filter(Mujer==1) %>% 
-    filter(Preescolar...48==1) %>% 
-    summarise(suma=n())
+base %>% 
+  filter(Mujer==1) %>% 
+  filter(Preescolar...48==1) %>% 
+  summarise(suma=n())
 
-base %>% group_by(Unidad) %>% 
+base %>% 
   filter(Mujer==1) %>% 
   filter(Primaria...49==1) %>% 
   summarise(suma=n())
 
-b<- base %>% group_by(Unidad) %>% 
+base %>%
   filter(Mujer==1) %>% 
   filter(Secundaria...50==1) %>% 
   summarise(suma=n())
 
-base %>% group_by(Unidad) %>% 
+
+base %>%
+  filter(Mujer==1) %>% 
+  filter(`Preparatoria o bachillerato`==1) %>% 
+  summarise(suma=n())
+
+base %>%
+  filter(Mujer==1) %>% 
+  filter(base$`Carrera Técnica`==1) %>% 
+  summarise(suma=n())
+
+base %>% 
   filter(Mujer==1) %>% 
   filter(Profesional==1) %>% 
   summarise(suma=n())
 
-base %>% group_by(Unidad) %>% 
+base %>% 
   filter(Mujer==1) %>% 
   filter(`Maestría, doctorado`==1) %>% 
   summarise(suma=n())
@@ -144,25 +229,30 @@ base %>% group_by(Unidad) %>%
 
 c<- merge(a,b, by.x = "Unidad", by.y = "Unidad", all.y = T)
 
-
-base %>% group_by(Unidad) %>% 
+#####Ocupacion
+base %>% 
   filter(Mujer==1) %>% 
   filter(`Labores domésticas de su casa`==1) %>% 
   summarise(suma=n())
 
-base %>% group_by(Unidad) %>% 
+base %>% 
   filter(Mujer==1) %>% 
   filter(`Estudiante`==1) %>% 
   summarise(suma=n())
 
-base %>% group_by(Unidad) %>% 
+base %>% 
   filter(Mujer==1) %>% 
   filter(`Trabajo Remunerado`==1) %>% 
   summarise(suma=n())
 
-base %>% group_by(Unidad) %>% 
+base %>%  
   filter(Mujer==1) %>% 
   filter(`Trabajo no remunerado`==1) %>% 
+  summarise(suma=n())
+
+base %>%  
+  filter(Mujer==1) %>% 
+  filter(`Desempleada/o`==1) %>% 
   summarise(suma=n())
 
 base %>% group_by(Unidad) %>% 
@@ -225,7 +315,4 @@ base %>% group_by(`Unidad`) %>%
 base %>% group_by(`Unidad`) %>% 
   filter(`Otro`==1) %>% 
   summarise(suma=n())
-
-
-
 
