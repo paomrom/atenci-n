@@ -1,36 +1,44 @@
+
+############################### Atenciones ####################################3 
+
+#Librerias a utilizar
 library(readxl)
 library(dplyr)
 library(tidyr)
 
-ameca  <- read_excel("C:/Users/paola/Documents/2022_Homologado_observaciones.xlsx", sheet = "Ameca 22")
-grullo <- read_excel("C:/Users/paola/Documents/2022_Homologado_observaciones.xlsx", sheet = "El Grullo 22")
-barca  <- read_excel("C:/Users/paola/Documents/2022_Homologado_observaciones.xlsx", sheet = "La Barca 22")
-zapotlan <- read_excel("C:/Users/paola/Documents/2022_Homologado_observaciones.xlsx", sheet = "Zapotlán 22")
-tlajo  <- read_excel("C:/Users/paola/Documents/2022_Homologado_observaciones.xlsx", sheet = "Tlajo 22")
-umea <- read_excel("C:/Users/paola/Documents/2022_Homologado_observaciones.xlsx", sheet = "UMEA 22")
-salto  <- read_excel("C:/Users/paola/Documents/2022_Homologado_observaciones.xlsx", sheet = "El Salto 22")
-zoquipan  <- read_excel("C:/Users/paola/Documents/2022_Homologado_observaciones.xlsx", sheet = "Zoquipan 22")
+#En caso de que el excel este dividido por pestañas
+
+# ameca  <- read_excel("C:/Users/paola/Documents/2022_Homologado_observaciones.xlsx", sheet = "Ameca 22")
+# grullo <- read_excel("C:/Users/paola/Documents/2022_Homologado_observaciones.xlsx", sheet = "El Grullo 22")
+# barca  <- read_excel("C:/Users/paola/Documents/2022_Homologado_observaciones.xlsx", sheet = "La Barca 22")
+# zapotlan <- read_excel("C:/Users/paola/Documents/2022_Homologado_observaciones.xlsx", sheet = "Zapotlán 22")
+# tlajo  <- read_excel("C:/Users/paola/Documents/2022_Homologado_observaciones.xlsx", sheet = "Tlajo 22")
+# umea <- read_excel("C:/Users/paola/Documents/2022_Homologado_observaciones.xlsx", sheet = "UMEA 22")
+# salto  <- read_excel("C:/Users/paola/Documents/2022_Homologado_observaciones.xlsx", sheet = "El Salto 22")
+# zoquipan  <- read_excel("C:/Users/paola/Documents/2022_Homologado_observaciones.xlsx", sheet = "Zoquipan 22")
 
 
-a_base <-rbind(ameca, grullo, barca, zapotlan, tlajo, salto, zoquipan)
-a_base_2<-rbind(a_base,umea)
+#Unir pestañas
 
-write.csv(a_base, "base_atencion.csv")
+#base <-rbind(ameca, grullo, barca, zapotlan, tlajo, salto, zoquipan, umea)
 
-base<- read_excel("base_atencion_enero.xlsx")
+# Exportarla
+
+# write.csv(a_base, "base_atencion.csv")
+
+#Cargar archivo excel 
+
+base <- read_excel("C:/Users/Paola Viridiana/Downloads/Telegram Desktop/2022_Homologado_observaciones AGOSTO.xlsx")
+
+#Total de atenciones
+dim(base)
+
 
 #Total de personas atendidas
+
 base %>% 
   filter(Mujer==1) %>% 
   summarise(suma=n())
-
-base %>% group_by(Unidad) %>% 
-  summarise(suma=n())
-
-#Edad
-base %>%
-  filter(`EDAD (MESECVI) (ONU)EDAD (MESECVI) (ONU)`<100) %>% 
-  summarise(promedio=mean(`EDAD (MESECVI) (ONU)EDAD (MESECVI) (ONU)`, na.rm=T))
 
 #Serv
 base %>% 
@@ -60,6 +68,10 @@ base %>%
   summarise(sum=n())
 
 base %>% 
+  filter(`Anuncio`==1) %>% 
+  summarise(sum=n())
+
+base %>% 
   filter(`Conocidos`==1) %>% 
   summarise(sum=n())
 
@@ -68,10 +80,31 @@ base %>%
   summarise(sum=n())
 
 base %>% 
+  filter(`Prensa`==1) %>% 
+  summarise(sum=n())
+
+base %>% 
+  filter(`Radio`==1) %>% 
+  summarise(sum=n())
+
+base %>% 
+  filter(`Internet`==1) %>% 
+  summarise(sum=n())
+
+base %>% 
+  filter(Televisión==1) %>% 
+  summarise(sum=n())
+
+base %>% 
   filter(`Otra Institución`==1) %>% 
   summarise(sum=n())
+
+base %>% 
+  filter(base$Otro...227==1) %>% 
+  summarise(sum=n())
+
 #Presenta algún trámite en proceso
-base %>% group_by(Unidad) %>% 
+base %>% 
   filter(`Presenta algún trámite en proceso.\r\nSi (1) - No (0)`==0) %>% 
   summarise(sum=n())
 
@@ -112,11 +145,8 @@ base %>%
 
 
 
-base %>%  
-  filter(Intersexual==1) %>% 
-  summarise(suma=n())
 
-###Ultimo episodio de violenci
+###Ultimo episodio de violencia
 base %>% 
   filter(`1 mes`==1)%>% 
   summarise(suma=n())
@@ -158,14 +188,13 @@ base %>%
 #Originario de lengua indigena
 base %>% 
   filter(base$`Hablante de lengua indígena.
-         Si (1) - No (0)`==1)%>% 
-  summarise(suma=n())
+Si (1) - No (0)` %>% 
+  summarise(suma=n()))
 
-base %>% filter(`Habla alguna lengua extranjera.
-                 Si (1) - No (0)`==1) %>% summarise(suma=n())
+
+
 
 #Edo civil
-
 base %>%
   filter(Mujer==1) %>% 
   filter(`Soltera/o`==1) %>% 
@@ -229,7 +258,6 @@ base %>%
   summarise(suma=n())
 
 
-c<- merge(a,b, by.x = "Unidad", by.y = "Unidad", all.y = T)
 
 #####Ocupacion
 base %>% 
@@ -249,94 +277,37 @@ base %>%
 
 base %>%  
   filter(Mujer==1) %>% 
-  filter(`Trabajo Remunerado`==1) %>% 
+  filter(`Desempleada/o`==1) %>% 
   summarise(suma=n())
+
 
 base %>%  
   filter(Mujer==1) %>% 
   filter(`Trabajo no remunerado`==1) %>% 
   summarise(suma=n())
 
-base %>%  
-  filter(Mujer==1) %>% 
-  filter(`Desempleada/o`==1) %>% 
-  summarise(suma=n())
-
-base %>% group_by(Unidad) %>% 
-  filter(Mujer==1) %>% 
-  filter(`Vive violencia por presentar alguna discapacidad.
-          Si (1) - No (0)`==1) %>% 
-  summarise(suma=n())
-
-base %>% group_by(Unidad) %>% 
-  filter(Mujer==1) %>% 
-  filter(`==1) %>% 
-  summarise(suma=n())
-
-mun<- base %>% group_by(`Entidad Federativa`) %>% 
-  filter(Mujer==1) %>% 
-  summarise(suma=n())
-
-write.csv(mun, "base_atencion_mun.csv")
-
-$Hijos/as`
 
 
-base %>% group_by(Unidad) %>% 
-  filter(Mujer==1) %>% 
-  summarise(promedio=mean(`Hijos/as`, na.rm=T))
 
-base %>%  
-  filter(`Al pasar`==1) %>% 
-  summarise(suma=n())
-
-base %>%
-  filter(`Anuncio`==1) %>% 
-  summarise(suma=n())
-
-base %>% 
-  filter(`Conocidos`==1) %>% 
-  summarise(suma=n())
-
-base %>% 
-  filter(`Internet`==1) %>% 
-  summarise(suma=n())
-
-base %>% 
-  filter(`Prensa`==1) %>% 
-  summarise(suma=n())
-
-
-base %>% 
-  filter(`Radio`==1) %>% 
-  summarise(suma=n())
-
-base %>% 
-  filter(`Televisión`==1) %>% 
-  summarise(suma=n())
-
-base %>% 
-  filter(`Otra Institución`==1) %>% 
-  summarise(suma=n())
-
-base %>%  
-  filter(Otro...227==1) %>% 
-  summarise(suma=n())
-
-###SErvicios
-
-base %>% group_by(Unidad) %>% 
-  filter(`Consejería`==1) %>% 
-  summarise(Consejería=n())
+###Servicios por unidad
 
 base  %>% group_by(Unidad) %>% 
   filter(`Asesoría Jurídica`==1) %>% 
   summarise(Asesoría=n())
 
 base  %>% group_by(Unidad) %>% 
+  filter(`Asesoría Psicologica`==1) %>% 
+  summarise(Ase_psi=n())
+
+base  %>% group_by(Unidad) %>% 
   filter(`Trabajo Social`==1) %>% 
   summarise(trabso=n())
 
-base  %>% group_by(Unidad) %>% 
-  filter(`Asesoría Psicologica`==1) %>% 
-  summarise(Ase_psi=n())
+base %>% group_by(Unidad) %>% 
+  filter(`Consejería`==1) %>% 
+  summarise(Consejería=n())
+
+###################### Total por unidad
+
+base %>% group_by(Unidad) %>% 
+  summarise(suma=n())
